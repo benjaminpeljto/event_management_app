@@ -1,23 +1,28 @@
-package ba.ibu.edu.web_engineering_project.core.model;
+package ba.ibu.edu.web_engineering_project.rest.dto;
 
+import ba.ibu.edu.web_engineering_project.core.model.User;
 import ba.ibu.edu.web_engineering_project.core.model.enums.UserType;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
-@Document
-public class User {
-    @Id
+public class UserDTO {
     private String id;
     private String username;
-    private String firstName;
-    private String lastName;
-    private String address;
+    private String name;
     private String email;
-    private String password;
     private UserType userType;
     private Date creationDate;
+
+
+
+    public UserDTO(User user){
+        this.id = user.getId();
+        this.name = user.getFirstName() + " " + user.getLastName();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.userType = user.getUserType();
+        this.creationDate = user.getCreationDate();
+    }
 
 
     public String getId() {
@@ -36,28 +41,12 @@ public class User {
         this.username = username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -66,14 +55,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public UserType getUserType() {
