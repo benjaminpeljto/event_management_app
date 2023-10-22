@@ -47,7 +47,7 @@ public class EventService {
             throw new ResourceNotFoundException("The event with the provided ID does not exist.");
         }
         Event updatedEvent = payload.toEntity();
-        updatedEvent.setId(id);
+        updatedEvent.setId(event.get().getId());
         updatedEvent = eventRepository.save(updatedEvent);
         return new EventDTO(updatedEvent);
     }
