@@ -1,0 +1,14 @@
+configuration:
+  swagger:
+    app: 'Event Management App'
+    description: 'Web app for managing events in a certain city/country.'
+    developer: 'Benjamin Peljto'
+    email: 'benjamin.peljto@stu.ibu.edu.ba'
+
+
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: event-management
