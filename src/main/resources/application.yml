@@ -11,4 +11,28 @@ spring:
     mongodb:
       host: localhost
       port: 27017
-      database: event-management
+      database: eventifydb
+  mail:
+    host: 'smtp.gmail.com'
+    port: 587
+    username: 'benjaminpeljto00@gmail.com'
+    password: 'aieu lzsi ugqi mppx'
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+email:
+  mailgun:
+    domain: https://api.mailgun.net/v3/sandbox93d2af94da984fd88d2b981c38eb27be.mailgun.org
+    from-email: Eventify <mailgun@sandbox93d2af94da984fd88d2b981c38eb27be.mailgun.org>
+    username: api
+    password: 3ff06f4f0e707dcc89d8d4dbb97ca952-1c7e8847-3b7b41f3
+
+security:
+  jwt:
+    secret: '11af9ed3fdc7354ff722f1b30d782bc220758adf1f6658931873e2683f1f7d8c'
