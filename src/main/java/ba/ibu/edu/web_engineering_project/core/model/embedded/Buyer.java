@@ -5,6 +5,12 @@ public class Buyer {
     private String name;
     private String email;
 
+    public Buyer(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+    public Buyer(){}
+
     public String getId() {
         return id;
     }
