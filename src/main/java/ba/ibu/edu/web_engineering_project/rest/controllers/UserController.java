@@ -3,14 +3,18 @@ package ba.ibu.edu.web_engineering_project.rest.controllers;
 import ba.ibu.edu.web_engineering_project.core.service.UserService;
 import ba.ibu.edu.web_engineering_project.rest.dto.UserDTO;
 import ba.ibu.edu.web_engineering_project.rest.dto.UserRequestDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
+@SecurityRequirement(name = "JWT Security")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
 

@@ -5,6 +5,12 @@ public class Organizer {
     private String name;
     private String email;
 
+    public Organizer(){}
+
+    public Organizer(String name) {
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }
