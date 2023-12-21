@@ -2,11 +2,13 @@ package ba.ibu.edu.web_engineering_project.rest.dto;
 
 import ba.ibu.edu.web_engineering_project.core.model.Event;
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Organizer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.SeatsPerTicketType;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventCategory;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventStatus;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class EventDTO {
     private String id;
@@ -15,10 +17,11 @@ public class EventDTO {
     private String location;
     private EventCategory eventCategory;
     private Organizer organizer;
-    private int availableSeats;
     private LocalDateTime occuranceDateTime;
     private EventStatus eventStatus;
     private Date creationDate;
+    private List<SeatsPerTicketType> seatsPerTicketType;
+    private int totalAvailableSeats;
 
 
     public EventDTO(Event event){
@@ -28,10 +31,11 @@ public class EventDTO {
         this.location = event.getLocation();
         this.eventCategory = event.getEventCategory();
         this.organizer = event.getOrganizer();
-        this.availableSeats = event.getAvailableSeats();
         this.occuranceDateTime = event.getOccuranceDateTime();
         this.eventStatus = event.getEventStatus();
         this.creationDate = event.getCreationDate();
+        this.seatsPerTicketType = event.getSeatsPerTicketType();
+        this.totalAvailableSeats = calculateTotalAvailableSeats(this.seatsPerTicketType);
     }
 
 
@@ -83,14 +87,6 @@ public class EventDTO {
         this.organizer = organizer;
     }
 
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
-    }
-
     public LocalDateTime getOccuranceDateTime() {
         return occuranceDateTime;
     }
@@ -113,5 +109,33 @@ public class EventDTO {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<SeatsPerTicketType> getSeatsPerTicketType() {
+        return seatsPerTicketType;
+    }
+
+    public void setSeatsPerTicketType(List<SeatsPerTicketType> seatsPerTicketType) {
+        this.seatsPerTicketType = seatsPerTicketType;
+    }
+
+    public int getTotalAvailableSeats() {
+        return totalAvailableSeats;
+    }
+
+    public void setTotalAvailableSeats(int totalAvailableSeats) {
+        this.totalAvailableSeats = totalAvailableSeats;
+    }
+
+    private int calculateTotalAvailableSeats(List<SeatsPerTicketType> seatsPerTicketType) {
+        int totalSeats = 0;
+
+        if (seatsPerTicketType != null) {
+            for (SeatsPerTicketType seatType : seatsPerTicketType) {
+                totalSeats += seatType.getQuantity();
+            }
+        }
+
+        return totalSeats;
     }
 }
