@@ -12,6 +12,4 @@ public class GmailSMTPConfiguration {
 
     @Bean
     public String fromEmailGmail(){ return this.fromEmail; }
-
-
 }
