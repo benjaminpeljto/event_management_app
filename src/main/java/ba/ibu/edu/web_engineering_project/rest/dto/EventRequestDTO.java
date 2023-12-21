@@ -2,12 +2,15 @@ package ba.ibu.edu.web_engineering_project.rest.dto;
 
 import ba.ibu.edu.web_engineering_project.core.model.Event;
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Organizer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.SeatsPerTicketType;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventCategory;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventStatus;
 import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EventRequestDTO {
     private String name;
@@ -15,11 +18,9 @@ public class EventRequestDTO {
     private String location;
     private EventCategory eventCategory;
     private String organizerId;
-    private String organizerName;
-    private String organizerEmail;
-    private int availableSeats;
     private LocalDateTime occuranceDateTime;
     private EventStatus eventStatus;
+    private List<EventRequestTicketTypeDTO> ticketTypes;
 
 
     public EventRequestDTO(){}
@@ -30,19 +31,13 @@ public class EventRequestDTO {
         this.location = event.getLocation();
         this.eventCategory = event.getEventCategory();
         this.organizerId = event.getOrganizer().getId();
-        this.organizerName = event.getOrganizer().getName();
-        this.organizerEmail = event.getOrganizer().getEmail();
-        this.availableSeats = event.getAvailableSeats();
         this.occuranceDateTime = event.getOccuranceDateTime();
         this.eventStatus = event.getEventStatus();
     }
 
-    public Event toEntity(){
 
-        Organizer organizer = new Organizer();
-        organizer.setId(this.organizerId);
-        organizer.setName(this.organizerName);
-        organizer.setEmail(this.organizerEmail);
+
+    public Event toEntity(){
 
         Event event = new Event();
 
@@ -50,11 +45,22 @@ public class EventRequestDTO {
         event.setDescription(this.description);
         event.setLocation(this.location);
         event.setEventCategory(this.eventCategory);
-        event.setOrganizer(organizer);
-        event.setAvailableSeats(this.availableSeats);
         event.setOccuranceDateTime(this.occuranceDateTime);
         event.setEventStatus(this.eventStatus);
         event.setCreationDate(new Date());
+
+        // Mapping TicketPurchaseTypeQuantityDTO into embedded SeatsPerTicketType type
+        List<SeatsPerTicketType> seatsPerTicketTypes = new ArrayList<>();
+        if (this.ticketTypes != null) {
+            for (EventRequestTicketTypeDTO ticketTypeDTO : this.ticketTypes) {
+                SeatsPerTicketType seatsPerTicketType = new SeatsPerTicketType();
+                seatsPerTicketType.setTicketType(ticketTypeDTO.getTicketType());
+                seatsPerTicketType.setQuantity(ticketTypeDTO.getQuantity());
+                seatsPerTicketType.setTypePrice(ticketTypeDTO.getTypePrice());
+                seatsPerTicketTypes.add(seatsPerTicketType);
+            }
+        }
+        event.setSeatsPerTicketType(seatsPerTicketTypes);
         return event;
     }
 
@@ -98,30 +104,6 @@ public class EventRequestDTO {
         this.organizerId = organizerId;
     }
 
-    public String getOrganizerName() {
-        return organizerName;
-    }
-
-    public void setOrganizerName(String organizerName) {
-        this.organizerName = organizerName;
-    }
-
-    public String getOrganizerEmail() {
-        return organizerEmail;
-    }
-
-    public void setOrganizerEmail(String organizerEmail) {
-        this.organizerEmail = organizerEmail;
-    }
-
-    public int getAvailableSeats() {
-        return availableSeats;
-    }
-
-    public void setAvailableSeats(int availableSeats) {
-        this.availableSeats = availableSeats;
-    }
-
     public LocalDateTime getOccuranceDateTime() {
         return occuranceDateTime;
     }
@@ -136,5 +118,13 @@ public class EventRequestDTO {
 
     public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus = eventStatus;
+    }
+
+    public List<EventRequestTicketTypeDTO> getTicketTypes() {
+        return ticketTypes;
+    }
+
+    public void setTicketTypes(List<EventRequestTicketTypeDTO> ticketTypes) {
+        this.ticketTypes = ticketTypes;
     }
 }
