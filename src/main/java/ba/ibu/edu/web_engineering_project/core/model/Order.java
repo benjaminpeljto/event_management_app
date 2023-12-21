@@ -1,14 +1,14 @@
 package ba.ibu.edu.web_engineering_project.core.model;
 
-import ba.ibu.edu.web_engineering_project.core.model.embedded.Buyer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.OrderBoughtTicket;
 import ba.ibu.edu.web_engineering_project.core.model.enums.PaymentType;
 
 import java.util.List;
 
 public class Order {
     private String id;
-    private Buyer buyer;
-    private List<String> boughtTicketIds;
+    private String buyerId;
+    private List<OrderBoughtTicket> orderBoughtTickets;
     private double totalPrice;
     private PaymentType paymentType;
 
@@ -20,20 +20,20 @@ public class Order {
         this.id = id;
     }
 
-    public Buyer getBuyer() {
-        return buyer;
+    public String getBuyerId() {
+        return buyerId;
     }
 
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
+    public void setBuyerId(String buyerId) {
+        this.buyerId = buyerId;
     }
 
-    public List<String> getBoughtTicketIds() {
-        return boughtTicketIds;
+    public List<OrderBoughtTicket> getBoughtTickets() {
+        return orderBoughtTickets;
     }
 
-    public void setBoughtTicketIds(List<String> boughtTicketId) {
-        this.boughtTicketIds = boughtTicketId;
+    public void setBoughtTickets(List<OrderBoughtTicket> orderBoughtTickets) {
+        this.orderBoughtTickets = orderBoughtTickets;
     }
 
     public double getTotalPrice() {
