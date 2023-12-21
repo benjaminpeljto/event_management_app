@@ -1,6 +1,7 @@
 package ba.ibu.edu.web_engineering_project.core.model;
 
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Organizer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.SeatsPerTicketType;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventCategory;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventStatus;
 import org.springframework.data.annotation.Id;
@@ -8,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Document
 public class Event {
@@ -22,6 +24,8 @@ public class Event {
     private LocalDateTime occuranceDateTime;
     private EventStatus eventStatus;
     private Date creationDate;
+    private List<SeatsPerTicketType> seatsPerTicketType;
+
 
     public String getId() {
         return id;
@@ -101,5 +105,13 @@ public class Event {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<SeatsPerTicketType> getSeatsPerTicketType() {
+        return seatsPerTicketType;
+    }
+
+    public void setSeatsPerTicketType(List<SeatsPerTicketType> seatsPerTicketType) {
+        this.seatsPerTicketType = seatsPerTicketType;
     }
 }
