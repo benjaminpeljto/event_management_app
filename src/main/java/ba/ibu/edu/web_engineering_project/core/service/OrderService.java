@@ -3,6 +3,7 @@ package ba.ibu.edu.web_engineering_project.core.service;
 import ba.ibu.edu.web_engineering_project.api.impl.mailsender.AsyncMailSender;
 import ba.ibu.edu.web_engineering_project.api.impl.mailsender.GmailSMTPSender;
 import ba.ibu.edu.web_engineering_project.api.impl.qr.QRGenerator;
+import ba.ibu.edu.web_engineering_project.api.lambda.GenerateAndMailTicketsLambda;
 import ba.ibu.edu.web_engineering_project.core.exceptions.event.InvalidEventStatusException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.order.TicketPurchaseException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ResourceNotFoundException;
@@ -31,16 +32,18 @@ public class OrderService {
     private final UserService userService;
     private final TicketService ticketService;
     private final EventService eventService;
-    private final QRGenerator qrGenerator;
-    private final AsyncMailSender asyncMailSender;
+    private final GenerateAndMailTicketsLambda generateAndMailTicketsLambda;
+    //private final QRGenerator qrGenerator;
+    //private final AsyncMailSender asyncMailSender;
 
-    public OrderService(OrderRepository orderRepository, UserService userService, TicketService ticketService, EventService eventService, QRGenerator qrGenerator, GmailSMTPSender gmailSMTPSender, AsyncMailSender asyncMailSender) {
+    public OrderService(OrderRepository orderRepository, UserService userService, TicketService ticketService, EventService eventService, QRGenerator qrGenerator, GmailSMTPSender gmailSMTPSender, AsyncMailSender asyncMailSender, GenerateAndMailTicketsLambda generateAndMailTicketsLambda) {
         this.orderRepository = orderRepository;
         this.userService = userService;
         this.ticketService = ticketService;
         this.eventService = eventService;
-        this.qrGenerator = qrGenerator;
-        this.asyncMailSender = asyncMailSender;
+        this.generateAndMailTicketsLambda = generateAndMailTicketsLambda;
+        //this.qrGenerator = qrGenerator;
+        //this.asyncMailSender = asyncMailSender;
     }
 
     public List<Order> getOrders(){
@@ -120,15 +123,20 @@ public class OrderService {
 
         Event event1 = createEvent(event, seatsPerTicketTypeList);
         eventService.orderUpdateEvent(event1);
+        UserDTO buyer = userService.getUserById(ticketPurchaseRequestDTO.getUserId());
 
-        // Generating QR codes
-        for(Ticket t : tickets){
+        // Generating QR codes and sending to user ** NOT NECESSARY NOW BECAUSE OF LAMBDA THAT IS MADE
+        /*for(Ticket t : tickets){
             qrGenerator.generateTicketQR(t.getId(), t.getBuyerId(), t.getEvent().getTitle(), t.getTicketType().name());
         }
-
+        // this is a method for sending generated QR codes but is also replaced by lambda
         asyncMailSender.sendQRTicketsAsync(userService.getUserById(ticketPurchaseRequestDTO.getUserId()).getEmail(), tickets);
+        */
 
-
+        //New implementation of the previous method ( with custom AWS lambda )
+        System.out.println("sending to lambda");
+        generateAndMailTicketsLambda.generateQRAndEmailTickets(buyer.getId(), buyer.getName(), buyer.getEmail(), tickets);
+        System.out.println("lambda done");
 
         Order order = new Order();
         order.setBuyerId(ticketPurchaseRequestDTO.getUserId());
