@@ -47,3 +47,4 @@ auth:
 aws:
   lambda:
     email-confirmation-lambda: https://f75k5m2ygpvw6bjzeqfi33nicm0vpqve.lambda-url.eu-central-1.on.aws/
+    generate-send-tickets-lambda: https://hf32xmiz5ibbvgeqokihzajvoy0dvini.lambda-url.eu-central-1.on.aws/
