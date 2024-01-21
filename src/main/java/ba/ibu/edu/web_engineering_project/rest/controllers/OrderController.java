@@ -3,10 +3,13 @@ package ba.ibu.edu.web_engineering_project.rest.controllers;
 import ba.ibu.edu.web_engineering_project.core.model.Order;
 import ba.ibu.edu.web_engineering_project.core.service.OrderService;
 import ba.ibu.edu.web_engineering_project.rest.dto.OrderRequestDTO;
+import ba.ibu.edu.web_engineering_project.rest.dto.TicketPurchaseRequestDTO;
+import com.google.zxing.WriterException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -42,5 +45,10 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable String id){
         orderService.deleteOrder(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/purchase")
+    public ResponseEntity<Order> purchaseTickets(@RequestBody TicketPurchaseRequestDTO ticketPurchaseRequestDTO) throws IOException, WriterException {
+        return ResponseEntity.ok(orderService.purchaseTickets(ticketPurchaseRequestDTO));
     }
 }

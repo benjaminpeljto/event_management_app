@@ -1,6 +1,8 @@
 package ba.ibu.edu.web_engineering_project.core.service;
 
+import ba.ibu.edu.web_engineering_project.api.impl.mailsender.AsyncMailSender;
 import ba.ibu.edu.web_engineering_project.api.impl.mailsender.GmailSMTPSender;
+import ba.ibu.edu.web_engineering_project.api.lambda.ConfirmationMailLambda;
 import ba.ibu.edu.web_engineering_project.core.api.mailsender.MailSender;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.EmailAlreadyExistsException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ResourceNotFoundException;
@@ -29,10 +31,9 @@ public class AuthService {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    private final ConfirmationMailLambda mailSender;
 
-    private final MailSender mailSender;
-
-    public AuthService(UserRepository userRepository, GmailSMTPSender mailSender) {
+    public AuthService(UserRepository userRepository, ConfirmationMailLambda mailSender) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
     }
@@ -53,9 +54,7 @@ public class AuthService {
                 "confirm your email by clicking on the link below\n" +
                 "localhost:8000/api/auth/confirm?verification=" + user.getVerificationToken(), "Confirm your account - Eventify");
         System.out.println(mailgunResponse);*/
-        String gmailSMTPResponse = mailSender.send(user, "Your account was successfully created. Please " +
-                "confirm your email by clicking on the link below\n" +
-                "localhost:8000/api/auth/confirm?verification=" + user.getVerificationToken(), "Confirm your account - Eventify");
+        mailSender.sendConfirmationMail(user.getFirstName(), user.getEmail(), user.getVerificationToken());
         return new UserDTO(user);
     }
 

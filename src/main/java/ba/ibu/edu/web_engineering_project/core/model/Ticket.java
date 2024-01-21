@@ -1,6 +1,7 @@
 package ba.ibu.edu.web_engineering_project.core.model;
 
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Buyer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.TicketEvent;
 import ba.ibu.edu.web_engineering_project.core.model.enums.TicketType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -13,10 +14,9 @@ public class Ticket {
     private String id;
     private TicketType ticketType;
     private double price;
-    private Buyer buyer;
-    private String eventId;
+    private String buyerId;
+    private TicketEvent event;
     private Date createdAt = new Date();
-    private Date expiresAt;
 
 
     public String getId() {
@@ -43,20 +43,20 @@ public class Ticket {
         this.price = price;
     }
 
-    public Buyer getBuyer() {
-        return buyer;
+    public String getBuyerId() {
+        return buyerId;
     }
 
-    public void setBuyer(Buyer buyer) {
-        this.buyer = buyer;
+    public void setBuyerId(String buyerId) {
+        this.buyerId = buyerId;
     }
 
-    public String getEventId() {
-        return eventId;
+    public TicketEvent getEvent() {
+        return event;
     }
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
+    public void setEvent(TicketEvent event) {
+        this.event = event;
     }
 
     public Date getCreatedAt() {
@@ -65,13 +65,5 @@ public class Ticket {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Date getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(Date expiresAt) {
-        this.expiresAt = expiresAt;
     }
 }

@@ -36,3 +36,15 @@ email:
 security:
   jwt:
     secret: '11af9ed3fdc7354ff722f1b30d782bc220758adf1f6658931873e2683f1f7d8c'
+
+
+qr:
+  temp-directory: src/main/java/ba/ibu/edu/web_engineering_project/api/impl/qr/temp
+
+auth:
+  confirmation-link: http://localhost:8000/api/auth/confirm?verification=
+
+aws:
+  lambda:
+    email-confirmation-lambda: https://f75k5m2ygpvw6bjzeqfi33nicm0vpqve.lambda-url.eu-central-1.on.aws/
+    generate-send-tickets-lambda: https://hf32xmiz5ibbvgeqokihzajvoy0dvini.lambda-url.eu-central-1.on.aws/

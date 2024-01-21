@@ -19,10 +19,6 @@ public class OrderRequestDTO {
     public OrderRequestDTO(){}
 
     public OrderRequestDTO(Order order){
-        this.buyerId = order.getBuyer().getId();
-        this.buyerName = order.getBuyer().getName();
-        this.buyerEmail = order.getBuyer().getEmail();
-        this.boughtTicketIds = order.getBoughtTicketIds();
         this.totalPrice = order.getTotalPrice();
         this.paymentType = order.getPaymentType();
     }
@@ -34,8 +30,7 @@ public class OrderRequestDTO {
         buyer.setEmail(this.buyerEmail);
 
         Order order = new Order();
-        order.setBuyer(buyer);
-        order.setBoughtTicketIds(this.boughtTicketIds);
+
         order.setTotalPrice(this.totalPrice);
         order.setPaymentType(this.paymentType);
         return order;
