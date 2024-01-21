@@ -25,12 +25,12 @@ public class MailgunConfiguration {
     private String domain;
 
     @Bean
-    public String fromEmail(){
+    public String fromEmail() {
         return this.fromEmail;
     }
 
     @Bean
-    public MailSender mailgunMailSender(RestTemplate restTemplate, String fromEmail){
+    public MailSender mailgunMailSender(RestTemplate restTemplate, String fromEmail) {
         return new MailgunSender(restTemplate, fromEmail);
     }
 

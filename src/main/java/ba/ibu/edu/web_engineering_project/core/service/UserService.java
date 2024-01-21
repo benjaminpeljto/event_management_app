@@ -1,6 +1,6 @@
 package ba.ibu.edu.web_engineering_project.core.service;
 
-import ba.ibu.edu.web_engineering_project.api.impl.mailsender.MailgunSender;
+import ba.ibu.edu.web_engineering_project.core.api.mailsender.MailSender;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ResourceNotFoundException;
 import ba.ibu.edu.web_engineering_project.core.model.User;
 import ba.ibu.edu.web_engineering_project.core.repository.UserRepository;
@@ -20,11 +20,9 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final MailgunSender mailgunSender;
 
-    public UserService(UserRepository userRepository, MailgunSender mailgunSender) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.mailgunSender = mailgunSender;
     }
 
 

@@ -24,6 +24,26 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEvents());
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/pending")
+    public ResponseEntity<List<EventDTO>> getPendingEvents(){
+        return ResponseEntity.ok(eventService.getPendingEvents());
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/approve/{id}")
+    public ResponseEntity<EventDTO> approveEvent(@PathVariable String id){
+        return ResponseEntity.ok(eventService.approveEvent(id));
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/set-live/{id}")
+    public ResponseEntity<EventDTO> onGoEvent(@PathVariable String id){
+        return ResponseEntity.ok(eventService.onGoEvent(id));
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, path = "/cancel/{id}")
+    public ResponseEntity<EventDTO> cancelEvent(@PathVariable String id){
+        return ResponseEntity.ok(eventService.cancelEvent(id));
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable String id){
         return ResponseEntity.ok(eventService.getEventById(id));
@@ -44,4 +64,6 @@ public class EventController {
         eventService.deleteEvent(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }

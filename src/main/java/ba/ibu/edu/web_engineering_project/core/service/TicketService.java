@@ -34,6 +34,10 @@ public class TicketService {
         return ticketRepository.save(payload.toEntity());
     }
 
+    public List<Ticket> addAllTickets(List<Ticket> tickets){
+        return ticketRepository.saveAll(tickets);
+    }
+
     public Ticket updateTicket(String id, TicketRequestDTO payload){
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if(ticket.isEmpty()){

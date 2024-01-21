@@ -1,6 +1,7 @@
 package ba.ibu.edu.web_engineering_project.rest.dto;
 import ba.ibu.edu.web_engineering_project.core.model.Ticket;
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Buyer;
+import ba.ibu.edu.web_engineering_project.core.model.embedded.TicketEvent;
 import ba.ibu.edu.web_engineering_project.core.model.enums.TicketType;
 
 import java.util.Date;
@@ -9,10 +10,7 @@ public class TicketRequestDTO {
     private TicketType ticketType;
     private double price;
     private String buyerId;
-    private String buyerName;
-    private String buyerEmail;
-    private String eventId;
-    private Date expiresAt;
+    private TicketEvent event;
 
 
     public TicketRequestDTO(){}
@@ -20,25 +18,19 @@ public class TicketRequestDTO {
     public TicketRequestDTO(Ticket ticket){
         this.ticketType = ticket.getTicketType();
         this.price = ticket.getPrice();
-        this.buyerId = ticket.getBuyer().getId();
-        this.buyerName = ticket.getBuyer().getName();
-        this.buyerEmail = ticket.getBuyer().getEmail();
-        this.eventId = ticket.getEventId();
-        this.expiresAt = ticket.getExpiresAt();
+        this.buyerId = ticket.getBuyerId();
+        this.event = ticket.getEvent();
     }
 
     public Ticket toEntity(){
         Buyer buyer = new Buyer();
         buyer.setId(this.buyerId);
-        buyer.setName(this.buyerName);
-        buyer.setEmail(this.buyerEmail);
 
         Ticket ticket = new Ticket();
         ticket.setTicketType(this.ticketType);
         ticket.setPrice(this.price);
-        ticket.setBuyer(buyer);
-        ticket.setEventId(this.eventId);
-        ticket.setExpiresAt(this.expiresAt);
+        ticket.setBuyerId(this.buyerId);
+        ticket.setEvent(this.event);
         return ticket;
     }
 
@@ -67,35 +59,11 @@ public class TicketRequestDTO {
         this.buyerId = buyerId;
     }
 
-    public String getBuyerName() {
-        return buyerName;
+    public TicketEvent getEvent() {
+        return event;
     }
 
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
-    }
-
-    public String getBuyerEmail() {
-        return buyerEmail;
-    }
-
-    public void setBuyerEmail(String buyerEmail) {
-        this.buyerEmail = buyerEmail;
-    }
-
-    public String getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
-    }
-
-    public Date getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(Date expiresAt) {
-        this.expiresAt = expiresAt;
+    public void setEvent(TicketEvent event) {
+        this.event = event;
     }
 }
