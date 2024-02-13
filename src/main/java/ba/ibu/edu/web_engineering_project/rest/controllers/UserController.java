@@ -13,8 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
-@SecurityRequirement(name = "JWT Security")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
     private final UserService userService;
 
@@ -23,6 +21,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UserDTO>> getUsers(){
         return ResponseEntity.ok(userService.getUsers());
     }

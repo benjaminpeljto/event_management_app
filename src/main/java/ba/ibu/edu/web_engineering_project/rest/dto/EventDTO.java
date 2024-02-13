@@ -22,6 +22,7 @@ public class EventDTO {
     private Date creationDate;
     private List<SeatsPerTicketType> seatsPerTicketType;
     private int totalAvailableSeats;
+    private String image;
 
 
     public EventDTO(Event event){
@@ -36,6 +37,7 @@ public class EventDTO {
         this.creationDate = event.getCreationDate();
         this.seatsPerTicketType = event.getSeatsPerTicketType();
         this.totalAvailableSeats = calculateTotalAvailableSeats(this.seatsPerTicketType);
+        this.image = event.getImage();
     }
 
 
@@ -137,5 +139,13 @@ public class EventDTO {
         }
 
         return totalSeats;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

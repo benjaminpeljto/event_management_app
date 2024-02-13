@@ -26,7 +26,7 @@ class UserTest {
         user.setAddress("Alipašina 167");
         user.setEmail("benjo@gmail.com");
         user.setPassword("passriječ");
-        user.setUserType(UserType.STAFF);
+        user.setUserType(UserType.MEMBER);
         user.setVerificationToken("token123");
         user.setTokenValidUntil(new Date());
         user.setActive(false);
@@ -42,7 +42,7 @@ class UserTest {
         assertEquals("Alipašina 167", user.getAddress());
         assertEquals("benjo@gmail.com", user.getEmail());
         assertEquals("passriječ", user.getPassword());
-        assertEquals(UserType.STAFF, user.getUserType());
+        assertEquals(UserType.MEMBER, user.getUserType());
         assertEquals("token123", user.getVerificationToken());
         assertEquals(false, user.isActive());
     }
@@ -59,6 +59,6 @@ class UserTest {
     public void testGetAuthorities() {
         Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
         assertEquals(1, authorities.size());
-        assertTrue(authorities.contains(new SimpleGrantedAuthority("STAFF")));
+        assertTrue(authorities.contains(new SimpleGrantedAuthority("MEMBER")));
     }
 }

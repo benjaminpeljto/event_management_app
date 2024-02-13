@@ -4,10 +4,13 @@ import ba.ibu.edu.web_engineering_project.api.impl.mailsender.AsyncMailSender;
 import ba.ibu.edu.web_engineering_project.api.impl.mailsender.GmailSMTPSender;
 import ba.ibu.edu.web_engineering_project.api.lambda.ConfirmationMailLambda;
 import ba.ibu.edu.web_engineering_project.core.api.mailsender.MailSender;
+import ba.ibu.edu.web_engineering_project.core.exceptions.account.AccountDisabledException;
+import ba.ibu.edu.web_engineering_project.core.exceptions.account.CustomBadCredentialsException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.EmailAlreadyExistsException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ResourceNotFoundException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ValidationTokenExpiredException;
 import ba.ibu.edu.web_engineering_project.core.model.User;
+import ba.ibu.edu.web_engineering_project.core.model.enums.UserType;
 import ba.ibu.edu.web_engineering_project.core.repository.UserRepository;
 import ba.ibu.edu.web_engineering_project.rest.dto.LoginDTO;
 import ba.ibu.edu.web_engineering_project.rest.dto.LoginRequestDTO;
@@ -15,10 +18,12 @@ import ba.ibu.edu.web_engineering_project.rest.dto.UserDTO;
 import ba.ibu.edu.web_engineering_project.rest.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,6 +47,9 @@ public class AuthService {
         if(userRepository.existsByEmail(userRequestDTO.getEmail())){
             throw new EmailAlreadyExistsException("Email already exists.");
         }
+        if(userRepository.existsByUsername(userRequestDTO.getUsername())){
+            throw new EmailAlreadyExistsException("Username already exists.");
+        }
         userRequestDTO.setPassword(
                 passwordEncoder.encode(userRequestDTO.getPassword())
         );
@@ -49,6 +57,7 @@ public class AuthService {
         user.setVerificationToken(String.valueOf(UUID.randomUUID()));
         user.setTokenValidUntil(new Date(System.currentTimeMillis() + 1000 * 60 * 60)); //Valid for one hour
         user.setActive(false);
+        user.setUserType(UserType.MEMBER);
         user = userRepository.save(user);
         /*String mailgunResponse = mailgunSender.send(user, "Your account was successfully created. Please " +
                 "confirm your email by clicking on the link below\n" +
@@ -59,15 +68,30 @@ public class AuthService {
     }
 
     public LoginDTO signIn(LoginRequestDTO loginRequestDTO) {
+        Optional<User> userOptional = userRepository.findFirstByEmail(loginRequestDTO.getEmail());
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
-        );
-        User user = userRepository.findFirstByEmail(loginRequestDTO.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("This user does not exist."));
-        String jwt = jwtService.generateToken(user);
-        System.out.println(new Date(System.currentTimeMillis()));
-        return new LoginDTO(jwt);
+        if (userOptional.isEmpty()) {
+            userOptional = userRepository.findFirstByUsername(loginRequestDTO.getEmail());
+        }
+
+        User user = userOptional.orElseThrow(() -> new ResourceNotFoundException("This user does not exist."));
+
+        if(!user.isActive()){
+            throw new AccountDisabledException("Account not enabled, please confirm your account.");
+        }
+
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword())
+            );
+        } catch (BadCredentialsException bce){
+            throw new CustomBadCredentialsException("Bad credentials.");
+        } catch (Exception e){
+            throw new CustomBadCredentialsException("Login failed.");
+        }
+
+        String jwt = jwtService.generateToken(user, user.getId());
+        return new LoginDTO(jwt, user.getUserType());
     }
 
     public String validateToken(String token){
