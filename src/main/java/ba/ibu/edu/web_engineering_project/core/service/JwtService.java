@@ -1,5 +1,6 @@
 package ba.ibu.edu.web_engineering_project.core.service;
 
+import ba.ibu.edu.web_engineering_project.core.model.enums.UserType;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.lang.Function;
 import io.jsonwebtoken.security.Keys;
@@ -25,13 +26,19 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
+    public String generateToken(UserDetails userDetails, String userId) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
+
+        return generateToken(claims, userDetails);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
-        System.out.println(userName);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 

@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                     //.requestMatchers(HttpMethod.GET, "/api/events/**").permitAll()
                     .requestMatchers("/api/users/**").authenticated()
+                    .requestMatchers("/api/events/**").permitAll()
                     .anyRequest().permitAll())
             .sessionManagement(manager ->
                     manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

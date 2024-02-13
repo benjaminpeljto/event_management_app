@@ -6,21 +6,20 @@ import java.util.List;
 
 public class TicketPurchaseRequestDTO {
 
-    private String userId;
     private String eventId;
     private List<TicketPurchaseTypeQuantityDTO> ticketTypes;
     private PaymentType paymentType;
 
+    public TicketPurchaseRequest toEntity(){
+        TicketPurchaseRequest tpr = new TicketPurchaseRequest();
+        tpr.setEventId(this.eventId);
+        tpr.setTicketTypes(this.ticketTypes);
+        tpr.setPaymentType(this.paymentType);
+        return tpr;
+    }
+
     public String getEventId() {
         return eventId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public void setEventId(String eventId) {

@@ -9,6 +9,8 @@ public class OrderBoughtTicket {
     private double price;
     private String eventId;
 
+    public OrderBoughtTicket(){}
+
     public OrderBoughtTicket(Ticket ticket){
         this.Id = ticket.getId();
         this.ticketType = ticket.getTicketType();

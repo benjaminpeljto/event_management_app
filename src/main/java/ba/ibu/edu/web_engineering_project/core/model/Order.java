@@ -2,10 +2,12 @@ package ba.ibu.edu.web_engineering_project.core.model;
 
 import ba.ibu.edu.web_engineering_project.core.model.embedded.OrderBoughtTicket;
 import ba.ibu.edu.web_engineering_project.core.model.enums.PaymentType;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
 public class Order {
+    @Id
     private String id;
     private String buyerId;
     private List<OrderBoughtTicket> orderBoughtTickets;

@@ -1,11 +1,13 @@
-import React from 'react'
+import { EventListHome } from "../components/EventListHome";
+import { MainCarousel } from "../components/MainCarousel";
 
-type Props = {}
-
-const Home = (props: Props) => {
+const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <div>
+      <MainCarousel />
+      <EventListHome />
+    </div>
+  );
+};
 
-export default Home
+export default Home;

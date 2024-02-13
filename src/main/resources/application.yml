@@ -9,9 +9,8 @@ configuration:
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
       database: eventifydb
+      uri: mongodb+srv://benjaminpeljto:w9FIoVs1dyDR966E@cluster0.27e6rwe.mongodb.net/?retryWrites=true&w=majority
   mail:
     host: 'smtp.gmail.com'
     port: 587
@@ -48,3 +47,12 @@ aws:
   lambda:
     email-confirmation-lambda: https://f75k5m2ygpvw6bjzeqfi33nicm0vpqve.lambda-url.eu-central-1.on.aws/
     generate-send-tickets-lambda: https://hf32xmiz5ibbvgeqokihzajvoy0dvini.lambda-url.eu-central-1.on.aws/
+  credentials:
+    access-key: AKIA3SXL3DGQDIYPEDMS
+    secret-key: 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
+  region:
+    static: eu-central-1
+  stack:
+    auto: false
+  bucket:
+    name: event-management-university-project
