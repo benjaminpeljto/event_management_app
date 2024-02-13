@@ -21,6 +21,7 @@ public class EventRequestDTO {
     private LocalDateTime occuranceDateTime;
     private EventStatus eventStatus;
     private List<EventRequestTicketTypeDTO> ticketTypes;
+    private String image;
 
 
     public EventRequestDTO(){}
@@ -48,7 +49,6 @@ public class EventRequestDTO {
         event.setOccuranceDateTime(this.occuranceDateTime);
         event.setEventStatus(this.eventStatus);
         event.setCreationDate(new Date());
-
         // Mapping TicketPurchaseTypeQuantityDTO into embedded SeatsPerTicketType type
         List<SeatsPerTicketType> seatsPerTicketTypes = new ArrayList<>();
         if (this.ticketTypes != null) {
@@ -61,6 +61,7 @@ public class EventRequestDTO {
             }
         }
         event.setSeatsPerTicketType(seatsPerTicketTypes);
+        event.setImage(this.image);
         return event;
     }
 
@@ -126,5 +127,13 @@ public class EventRequestDTO {
 
     public void setTicketTypes(List<EventRequestTicketTypeDTO> ticketTypes) {
         this.ticketTypes = ticketTypes;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -25,6 +25,7 @@ public class Event {
     private EventStatus eventStatus;
     private Date creationDate;
     private List<SeatsPerTicketType> seatsPerTicketType;
+    private String image;
 
 
     public String getId() {
@@ -113,5 +114,13 @@ public class Event {
 
     public void setSeatsPerTicketType(List<SeatsPerTicketType> seatsPerTicketType) {
         this.seatsPerTicketType = seatsPerTicketType;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

@@ -78,9 +78,10 @@ public class OrderService {
         order.ifPresent(orderRepository::delete);
     }
 
-    public Order purchaseTickets(TicketPurchaseRequestDTO ticketPurchaseRequestDTO) throws IOException, WriterException {
+    public Order purchaseTickets(TicketPurchaseRequest ticketPurchaseRequest) throws IOException, WriterException {
+        System.out.println("dobija null: " + ticketPurchaseRequest.getUserId());
 
-        EventDTO event = eventService.getEventById(ticketPurchaseRequestDTO.getEventId());
+        EventDTO event = eventService.getEventById(ticketPurchaseRequest.getEventId());
         validateEventStatus(event);
 
         List<Ticket> tickets = new ArrayList<>();
@@ -93,7 +94,7 @@ public class OrderService {
             // Searching if there is that ticket type in the request
             // if not, put inside the list and continue,
             // If yes, check if there is available, make tickets, put seats inside the list
-            TicketPurchaseTypeQuantityDTO ticketType = findTicketPurchaseTypeQuantity(ticketPurchaseRequestDTO.getTicketTypes(),seatsPerTicketType);
+            TicketPurchaseTypeQuantityDTO ticketType = findTicketPurchaseTypeQuantity(ticketPurchaseRequest.getTicketTypes(),seatsPerTicketType);
 
             if(ticketType != null){
                 if(seatsPerTicketType.getQuantity() < ticketType.getQuantity()){
@@ -111,7 +112,7 @@ public class OrderService {
                     ticket.setPrice(seatsPerTicketType.getTypePrice());
                     total += seatsPerTicketType.getTypePrice();
                     ticket.setEvent(ticketEvent);
-                    ticket.setBuyerId(ticketPurchaseRequestDTO.getUserId());
+                    ticket.setBuyerId(ticketPurchaseRequest.getUserId());
                     tickets.add(ticket);
                 }
             }
@@ -123,7 +124,8 @@ public class OrderService {
 
         Event event1 = createEvent(event, seatsPerTicketTypeList);
         eventService.orderUpdateEvent(event1);
-        UserDTO buyer = userService.getUserById(ticketPurchaseRequestDTO.getUserId());
+        System.out.println("lalalallal" + ticketPurchaseRequest.getUserId());
+        UserDTO buyer = userService.getUserById(ticketPurchaseRequest.getUserId());
 
         // Generating QR codes and sending to user ** NOT NECESSARY NOW BECAUSE OF LAMBDA THAT IS MADE
         /*for(Ticket t : tickets){
@@ -139,13 +141,13 @@ public class OrderService {
         System.out.println("lambda done");
 
         Order order = new Order();
-        order.setBuyerId(ticketPurchaseRequestDTO.getUserId());
+        order.setBuyerId(ticketPurchaseRequest.getUserId());
         order.setBoughtTickets(tickets
                 .stream()
                 .map(OrderBoughtTicket::new)
                 .collect(toList()));
         order.setTotalPrice(total);
-        order.setPaymentType(ticketPurchaseRequestDTO.getPaymentType());
+        order.setPaymentType(ticketPurchaseRequest.getPaymentType());
 
         return orderRepository.save(order);
 
@@ -162,6 +164,7 @@ public class OrderService {
         event1.setOccuranceDateTime(event.getOccuranceDateTime());
         event1.setEventStatus(event.getEventStatus());
         event1.setCreationDate(event.getCreationDate());
+        event1.setImage(event.getImage());
         event1.setSeatsPerTicketType(seatsPerTicketTypeList);
         return event1;
     }

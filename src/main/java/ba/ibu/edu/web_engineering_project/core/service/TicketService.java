@@ -22,6 +22,10 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
+    public List<Ticket> getTicketsByUser(String userId) {
+        return ticketRepository.findAllByBuyerId(userId);
+    }
+
     public Ticket getTicketById(String id){
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if(ticket.isEmpty()){

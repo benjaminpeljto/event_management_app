@@ -1,17 +1,21 @@
 package ba.ibu.edu.web_engineering_project.core.service;
 
+import ba.ibu.edu.web_engineering_project.core.exceptions.event.InvalidEventCategoryException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.event.InvalidEventStatusException;
 import ba.ibu.edu.web_engineering_project.core.exceptions.repository.ResourceNotFoundException;
 import ba.ibu.edu.web_engineering_project.core.model.Event;
 import ba.ibu.edu.web_engineering_project.core.model.User;
 import ba.ibu.edu.web_engineering_project.core.model.embedded.Organizer;
+import ba.ibu.edu.web_engineering_project.core.model.enums.EventCategory;
 import ba.ibu.edu.web_engineering_project.core.model.enums.EventStatus;
+import ba.ibu.edu.web_engineering_project.core.model.enums.UserType;
 import ba.ibu.edu.web_engineering_project.core.repository.EventRepository;
 import ba.ibu.edu.web_engineering_project.core.repository.UserRepository;
 import ba.ibu.edu.web_engineering_project.rest.dto.EventDTO;
 import ba.ibu.edu.web_engineering_project.rest.dto.EventRequestDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +47,46 @@ public class EventService {
         return new EventDTO(event.get());
     }
 
+    public List<EventDTO> getOngoingEvents(){
+        List<Event> ongoingEvents = eventRepository.findByEventStatus(EventStatus.ONGOING);
+        return ongoingEvents
+                .stream()
+                .map(EventDTO::new)
+                .collect(toList());
+    }
+
+    public List<EventDTO> getOngoingEventsByType(String eventType){
+        List<Event> ongoingEventsByType = null;
+        if(eventType.equals("music")) {
+            List<Event> ongoingConcertEvents = eventRepository.findByEventStatusAndEventCategory(EventStatus.ONGOING, EventCategory.CONCERT);
+            List<Event> ongoingGigEvents = eventRepository.findByEventStatusAndEventCategory(EventStatus.ONGOING, EventCategory.GIG);
+            ongoingEventsByType = new ArrayList<>(ongoingGigEvents);
+            ongoingEventsByType.addAll(ongoingConcertEvents);
+        }
+        else {
+            ongoingEventsByType = eventRepository.findByEventStatusAndEventCategory(EventStatus.ONGOING, stringToEnumEventType(eventType));
+        }
+
+        return ongoingEventsByType
+                .stream()
+                .map(EventDTO::new)
+                .collect(toList());
+    }
+
+    public List<EventDTO> getOngoingEventsByKeyword(String keyword){
+        List<Event> ongoingEventsByKeyword = eventRepository
+                .findByEventStatusAndNameIgnoreCaseLikeOrDescriptionIgnoreCaseLikeOrLocationIgnoreCaseLike(
+                        EventStatus.ONGOING,
+                        keyword,
+                        keyword,
+                        keyword
+                );
+        return ongoingEventsByKeyword
+                .stream()
+                .map(EventDTO::new)
+                .collect(toList());
+    }
+
     public List<EventDTO> getPendingEvents(){
         List<Event> pendingEvents =  eventRepository.findByEventStatus(EventStatus.PENDING_APPROVAL);
         return pendingEvents
@@ -55,6 +99,8 @@ public class EventService {
         Optional<User> organizer = userRepository.findById(payload.getOrganizerId());
 
         if(organizer.isEmpty()){
+            throw new ResourceNotFoundException("Invalid access.");
+        } else if(organizer.get().getUserType() != UserType.ORGANIZER){
             throw new ResourceNotFoundException("Invalid access.");
         }
 
@@ -73,7 +119,16 @@ public class EventService {
         if(event.isEmpty()){
             throw new ResourceNotFoundException("The event with the provided ID does not exist.");
         }
+        Optional<User> organizer = userRepository.findById(payload.getOrganizerId());
+        if(organizer.isEmpty()){
+            throw new ResourceNotFoundException("Invalid access.");
+        }
+        Organizer organizerEmbedded = new Organizer();
+        organizerEmbedded.setName(organizer.get().getUsername());
+        organizerEmbedded.setEmail(organizer.get().getEmail());
+        organizerEmbedded.setId(organizer.get().getId());
         Event updatedEvent = payload.toEntity();
+        updatedEvent.setOrganizer(organizerEmbedded);
         updatedEvent.setId(event.get().getId());
         updatedEvent = eventRepository.save(updatedEvent);
         return new EventDTO(updatedEvent);
@@ -102,7 +157,7 @@ public class EventService {
         if(event.isEmpty()){
             throw new ResourceNotFoundException("The event with the provided ID does not exist.");
         }
-        else if (event.get().getEventStatus() == EventStatus.SCHEDULED){
+        else if (event.get().getEventStatus() == EventStatus.PENDING_APPROVAL){
             event.get().setEventStatus(EventStatus.ONGOING);
             return new EventDTO(eventRepository.save(event.get()));
         }
@@ -128,6 +183,18 @@ public class EventService {
     public void deleteEvent(String id){
         Optional<Event> event = eventRepository.findById(id);
         event.ifPresent(eventRepository::delete);
+    }
+
+    private EventCategory stringToEnumEventType(String type){
+        return switch (type) {
+            case "sport" -> EventCategory.SPORT;
+            case "festival" -> EventCategory.FESTIVAL;
+            case "theater" -> EventCategory.THEATER;
+            case "food" -> EventCategory.FOOD;
+            case "seminar" -> EventCategory.SEMINAR;
+            default -> throw new InvalidEventCategoryException("Event category not defined.");
+        };
+
     }
 
 
