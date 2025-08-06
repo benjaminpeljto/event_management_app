@@ -14,7 +14,7 @@ I created 2 lambda functions for my project. Both are deployed and running on AW
 
 2. Lambda:
      - Used when user buys tickets for an event. It's purpose is to generate QR codes for the tickets, pack them as email attachment and email them to the user. Also can be tested through postman or similar.
-     - Link of it: https://hf32xmiz5ibbvgeqokihzajvoy0dvini.lambda-url.eu-central-1.on.aws/
+     - Link of it: https://smth.lambda-url.eu-central-1.on.aws/
      - Example JSON body for testing purposes (POST Request)
      - {
          "buyerID": "benjobenjo",
