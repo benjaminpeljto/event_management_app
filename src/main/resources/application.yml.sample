@@ -1,0 +1,58 @@
+configuration:
+  swagger:
+    app: 'Event Management App'
+    description: 'Web app for managing events in a certain city/country.'
+    developer: 'Benjamin Peljto'
+    email: 'benjamin.peljto@stu.ibu.edu.ba'
+
+
+spring:
+  data:
+    mongodb:
+      database: eventifydb
+      uri: mongodb+srv://benjaminpeljto:@cluster0.27e6rwe.mongodb.net/?retryWrites=true&w=majority
+  mail:
+    host: 'smtp.gmail.com'
+    port: 587
+    username: ''
+    password: ''
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+email:
+  mailgun:
+    domain: https://api.mailgun.net/v3/.mailgun.org
+    from-email: Eventify <mailgun@.mailgun.org>
+    username: api
+    password: 
+
+security:
+  jwt:
+    secret: ''
+
+
+qr:
+  temp-directory: src/main/java/ba/ibu/edu/web_engineering_project/api/impl/qr/temp
+
+auth:
+  confirmation-link: http://localhost:8000/api/auth/confirm?verification=
+
+aws:
+  lambda:
+    email-confirmation-lambda: https://.lambda-url.eu-central-1.on.aws/
+    generate-send-tickets-lambda: https://.lambda-url.eu-central-1.on.aws/
+  credentials:
+    access-key: 
+    secret-key: 
+  region:
+    static: eu-central-1
+  stack:
+    auto: false
+  bucket:
+    name: event-management-university-project
